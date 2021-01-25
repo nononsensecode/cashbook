@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" [ngClass]="
+    {
+        'heading': !(isMobile$ | async),
+        'heading-mobile': isMobile$ | async
+    }
+">
+    <span fxHide.lt-lg class="mat-display-1">{{ heading$ | async}}</span>
+    <span fxHide.gt-md class="mat-h1">{{ heading$ | async}}</span>
+</div>

@@ -6,14 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'my-app';
 
-  clickMessage = '';
-
-  onClickMe() {
-    // @ts-ignore
-    window.backend.startup().then(result =>
-      this.clickMessage = result
-    );
-  }
+  // onClickMe() {
+  //   // @ts-ignore
+  //   window.backend.startup().then(result =>
+  //     this.clickMessage = result
+  //   );
+  // }
 }

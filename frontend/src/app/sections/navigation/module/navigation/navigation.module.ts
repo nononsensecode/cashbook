@@ -10,12 +10,12 @@ import { ToolbarComponent } from "../../components/toolbar/toolbar.component";
         SidenavComponent,
         ToolbarComponent
     ],
-    exports: [
+    imports: [
         CommonModule,
         MaterialModule,
         AppRoutingModule
-    ],
-    imports: [
+    ],    
+    exports: [
         SidenavComponent,
         ToolbarComponent
     ]

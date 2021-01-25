@@ -1,0 +1,9 @@
+mat-sidenav-container {
+    min-height: 100vh;
+}
+
+mat-sidenav {
+    min-width: 35vw;
+    position: fixed;
+    z-index: 100;
+}

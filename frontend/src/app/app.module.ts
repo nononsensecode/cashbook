@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { APP_BASE_HREF } from '@angular/common';
+import { MaterialModule } from './shared/modules/material/material.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { APP_BASE_HREF } from '@angular/common';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule
   ],
   providers: [{provide: APP_BASE_HREF, useValue : '/' }],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" style="padding-top: 10px;">
+<mat-toolbar color="primary">
     <mat-toolbar-row class="mat-elevation-z8">
         <div *ngIf="isMobile$ | async">
             <button mat-icon-button (click)="onMainMenuClick()">
@@ -7,13 +7,26 @@
         </div>
         <div fxLayout="row" fxLayoutAlign="start center" syle="padding-top: 12px;">
             <a routerLink="/" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
-                <span fxHide.lt-md class="mat-h1">Cash Book</span>
-                <span fxHide.gt-sm class="mat-h2">Cash Book</span>
+                <span fxHide.lt-md class="mat-h1" style="padding-top: 20px;">Cash Book</span>
+                <span fxHide.gt-sm class="mat-h2" style="padding-top: 20px;">Cash Book</span>
             </a>
         </div>
         <div *ngIf="!(isMobile$ | async)" fxFlex fxLayoutAlign="flex-end">
             <ul>
-                <li><a routerLink="/" routerLinkActive="active">Cash Book Entry</a></li>
+                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                    true}">Dashboard</a></li>
+            </ul>
+            <ul>
+                <li><a routerLink="/cash-book-entry" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                    true}">Cash Book Entry</a></li>
+            </ul>
+            <ul>
+                <li><a routerLink="/settings" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                    true}">Settings</a></li>
+            </ul>
+            <ul>
+                <li><a routerLink="/account-codes" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                    true}">Account Codes</a></li>
             </ul>
         </div>
     </mat-toolbar-row>

@@ -1,0 +1,8 @@
+@import '~@angular/material/theming';
+
+$custom-typography: mat-typography-config(
+    $font-family: 'Roboto, sanserif',
+    $headline: mat-typography-level(32px, 48px, 400)
+);
+
+@include mat-base-typography($custom-typography);

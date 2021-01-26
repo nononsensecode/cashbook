@@ -8,6 +8,10 @@ import { APP_BASE_HREF } from '@angular/common';
 import { MaterialModule } from './shared/modules/material/material.module';
 import { NavigationModule } from './sections/navigation/module/navigation/navigation.module';
 import { HeaderFooterModule } from './sections/header-footer/module/header-footer/header-footer.module';
+import { CashBookEntryModule } from './sections/cash-book-entry/module/cash-book-entry/cash-book-entry.module';
+import { DashboardModule } from './sections/dashboard/module/dashboard/dashboard.module';
+import { SettingsModule } from './sections/settings/module/settings/settings.module';
+import { AccountCodesModule } from './sections/account-codes/module/account-codes/account-codes.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +23,10 @@ import { HeaderFooterModule } from './sections/header-footer/module/header-foote
     MaterialModule,
     NavigationModule,
     HeaderFooterModule,
+    CashBookEntryModule,
+    DashboardModule,
+    SettingsModule,
+    AccountCodesModule,
     BrowserAnimationsModule
   ],
   providers: [{provide: APP_BASE_HREF, useValue : '/' }],

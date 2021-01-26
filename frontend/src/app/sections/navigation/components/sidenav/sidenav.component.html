@@ -1,14 +1,18 @@
 <mat-nav-list fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px">
-    <a routerLink="/" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
-        <mat-icon>payment</mat-icon>
-        <span>Quick Pay</span>
+    <a routerLink="/dashboard" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
     </a>
-    <a routerLink="/register" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
-        <mat-icon>add_ic_call</mat-icon>
-        <span>Register</span>
+    <a routerLink="/cash-book-entry" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
+        <mat-icon>calculate</mat-icon>
+        <span>Cashbook Entry</span>
     </a>
-    <a routerLink="/support" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
-        <mat-icon>help</mat-icon>
-        <span>Support</span>
+    <a routerLink="/account-codes" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
+        <mat-icon>playlist_add</mat-icon>
+        <span>Account Codes</span>
+    </a>
+    <a routerLink="/settings" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" (click)="onLinkClick()">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
     </a>
 </mat-nav-list>

@@ -5,7 +5,10 @@ import { LayoutService } from "src/app/shared/services/layout/layout.service";
 @Component({
     selector: 'app-toolbar',
     templateUrl: './toolbar.component.html',
-    styleUrls: ['./toolbar.component.css']
+    styleUrls: [
+        './toolbar.component.css',
+        './toolbar.component.scss'
+    ]
 })
 export class ToolbarComponent implements OnInit {
 

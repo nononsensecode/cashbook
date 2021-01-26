@@ -1,6 +1,7 @@
 package model
 
 import (
+	"cashbook/cashbookerror"
 	"database/sql"
 	"time"
 )
@@ -10,7 +11,7 @@ var DB *sql.DB
 
 // AccountCode represents the account code in the cashbook
 type AccountCode struct {
-	ID      int64  `json:"Id"`
+	ID      int64  `json:"id"`
 	AccCode string `json:"accountCode"`
 	Desc    string `json:"description"`
 }
@@ -77,4 +78,113 @@ func CreateTables() error {
 	}
 
 	return nil
+}
+
+// AddAccountCode adds an account code row in the table
+func AddAccountCode(accountCode AccountCode) (AccountCode, error) {
+	transaction, err := DB.Begin()
+	if err != nil {
+		return AccountCode{}, err
+	}
+	defer transaction.Rollback()
+
+	statement, err := DB.Prepare("INSERT INTO acc_code (code, desc) VALUES (?, ?)")
+	if err != nil {
+		return AccountCode{}, err
+	}
+	defer statement.Close()
+
+	result, err := statement.Exec(accountCode.AccCode, accountCode.Desc)
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	err = transaction.Commit()
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	accountCode.ID, err = result.LastInsertId()
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	return accountCode, nil
+}
+
+// UpdateAccountCode updates an account code
+func UpdateAccountCode(accountCode AccountCode) (AccountCode, error) {
+	transaction, err := DB.Begin()
+	if err != nil {
+		return AccountCode{}, err
+	}
+	defer transaction.Rollback()
+
+	statement, err := DB.Prepare("UPDATE acc_code SET code = ?, desc = ? WHERE id = ?")
+	if err != nil {
+		return AccountCode{}, err
+	}
+	defer statement.Close()
+
+	result, err := statement.Exec(accountCode.AccCode, accountCode.Desc, accountCode.ID)
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	err = transaction.Commit()
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return AccountCode{}, err
+	}
+
+	if rowsAffected > 0 {
+		return accountCode, nil
+	} else {
+		return AccountCode{}, cashbookerror.NewAccountCodeError(500, "No rows affected")
+	}
+}
+
+// FindAllAccountCodes returns all account codes in the table
+func FindAllAccountCodes() ([]AccountCode, error) {
+	var accountCodes []AccountCode
+
+	rows, err := DB.Query("SELECT * FROM acc_code")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var accountCode AccountCode
+
+		err = rows.Scan(&accountCode.ID, &accountCode.AccCode, &accountCode.Desc)
+		if err != nil {
+			return nil, err
+		}
+
+		accountCodes = append(accountCodes, accountCode)
+	}
+
+	return accountCodes, nil
+}
+
+// FindAccountCodeByCode find the account code by the `code` supplied
+func FindAccountCodeByCode(code string) (AccountCode, error) {
+	var accountCode AccountCode
+	
+	err := DB.QueryRow("SELECT * FROM acc_code WHERE code = ?", code).
+		Scan(&accountCode.ID, &accountCode.AccCode, &accountCode.Desc)
+	
+	switch {
+	case err == sql.ErrNoRows:
+		return AccountCode{}, cashbookerror.AccountCodeDoesNotExistError(code)
+	case err != nil:
+		return AccountCode{}, cashbookerror.UnknownAccountCodeError(err)
+	default:
+		return accountCode, nil
+	}
 }

@@ -26,13 +26,26 @@ export class AccountCodesMainComponent {
     }
 
     saveCode() {
-        const id = (this.addCodeForm.get('id').value) ? this.addCodeForm.get('id').value : Math.floor(Math.random() * Math.floor(10000));
-        const code = this.addCodeForm.get('code').value as string;
+        const id = (this.addCodeForm.get('id').value) ? this.addCodeForm.get('id').value : null;
+        const accountCode = this.addCodeForm.get('code').value as string;
         const description = this.addCodeForm.get('description').value;
-        const codeObj = {id, code, description};
-        this.doesCodeExist(codeObj) ? this.updateCode(codeObj) : this.addNewCode(codeObj);
-        this.resetForm();
-        this.selection.clear();
+        const codeObj = {id, accountCode, description};
+        if (id == null) {
+            // @ts-ignore
+            window.backend.createAccountCode(codeObj).then(created => {
+                this.addNewCode(created);
+                this.resetForm();
+                this.selection.clear();
+            });
+        } else {
+            // @ts-ignore
+            window.backend.updateAccountCode(codeObj).then(updated => {
+                this.updateCode(updated);
+                this.resetForm();
+                this.selection.clear();
+            });
+        }
+        
     }
 
     reset() {
@@ -48,7 +61,7 @@ export class AccountCodesMainComponent {
 
     private updateCode(codeObj: AccountCode) {
         const code = this.dataSource.data.find(code => code.id === codeObj.id);
-        code.code = codeObj.code;
+        code.accountCode = codeObj.accountCode;
         code.description = codeObj.description;
     }
 
@@ -59,7 +72,7 @@ export class AccountCodesMainComponent {
     select(event, row: AccountCode) {
         if (event.checked) {
             this.addCodeForm.controls['id'].setValue(row.id);
-            this.addCodeForm.controls['code'].setValue(row.code);
+            this.addCodeForm.controls['code'].setValue(row.accountCode);
             this.addCodeForm.controls['description'].setValue(row.description);
         } else {
             this.resetForm();
@@ -73,9 +86,9 @@ export class AccountCodesMainComponent {
 }
 
 const ELEMENT_DATA: AccountCode[] = [
-    {id: 1, code: "1234", description: "Test code"},
-    {id: 2, code: "4578", description: "Test code"},
-    {id: 3, code: "6598", description: "Test code"},
-    {id: 4, code: "5879", description: "Test code"},
-    {id: 5, code: "7890", description: "Test code"},
+    {id: 1, accountCode: "1234", description: "Test code"},
+    {id: 2, accountCode: "4578", description: "Test code"},
+    {id: 3, accountCode: "6598", description: "Test code"},
+    {id: 4, accountCode: "5879", description: "Test code"},
+    {id: 5, accountCode: "7890", description: "Test code"},
 ];

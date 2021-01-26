@@ -1,7 +1,9 @@
 package main
 
 import (
+	"cashbook/cashbookerror"
 	"cashbook/model"
+	"cashbook/utils"
 	"database/sql"
 	"log"
 
@@ -34,6 +36,54 @@ func init() {
 	initDb = "Database and tables created successfully"
 }
 
+func findAllAccountCodes() string {
+	accountCodes, err := model.FindAllAccountCodes()
+	if err != nil {
+		log.Println(err)
+		return utils.RespondWithError(500, "Unknown error")
+	}
+	
+	return utils.RespondWithJSON(accountCodes)
+}
+
+func findAccountCodeByCode(code string) string {
+	accountCode, err := model.FindAccountCodeByCode(code)
+	if err != nil {
+		accountCodeError, ok := err.(*cashbookerror.AccountCodeError)
+		if ok {
+			log.Println(err)
+			switch{
+			case accountCodeError.Code == 404:
+				return utils.RespondWithError(accountCodeError.Code, accountCodeError.Err.Error())
+			default:
+				return utils.RespondWithError(500, "Unknown error")
+			}
+		}
+	}
+
+	return utils.RespondWithJSON(accountCode)
+}
+
+func createAccountCode(accountCode model.AccountCode) string {
+	createdAccCode, err := model.AddAccountCode(accountCode)
+	if err != nil {
+		log.Println(err)
+		return utils.RespondWithError(500, "Account could not be created due to unknown reasons")
+	}
+
+	return utils.RespondWithJSON(createdAccCode)
+}
+
+func updateAccountCode(accountCode model.AccountCode) string {
+	updatedAccCode, err := model.UpdateAccountCode(accountCode)
+	if err != nil {
+		log.Println(err)
+		return utils.RespondWithError(500, "Account code could not be updated")
+	}
+
+	return utils.RespondWithJSON(updatedAccCode)
+}
+
 func main() {
 
 	js := mewn.String("./frontend/dist/my-app/main.js")
@@ -48,5 +98,9 @@ func main() {
 		Colour: "#131313",
 	})
 	app.Bind(startup)
+	app.Bind(findAllAccountCodes)
+	app.Bind(findAccountCodeByCode)
+	app.Bind(createAccountCode)
+	app.Bind(updateAccountCode)
 	app.Run()
 }

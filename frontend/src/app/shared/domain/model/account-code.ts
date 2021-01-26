@@ -1,5 +1,5 @@
 export interface AccountCode {
     id: number,
-    code: string,
+    accountCode: string,
     description: string
 }

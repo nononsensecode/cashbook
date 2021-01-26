@@ -3,7 +3,9 @@ import { PlatformModule } from "@angular/cdk/platform";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { MatButtonModule, MatCardModule, MatDividerModule, MatIconModule, MatInputModule, MatListModule, MatSelectModule, MatSidenavModule, MatSnackBarModule, MatTableModule, MatToolbarModule, MatTooltipModule } from "@angular/material";
+import { MatButtonModule, MatCardModule, MatCheckboxModule, MatDividerModule, MatIconModule,
+     MatInputModule, MatListModule, MatSelectModule, MatSidenavModule,
+     MatSnackBarModule, MatTableModule, MatToolbarModule, MatTooltipModule } from "@angular/material";
 
 @NgModule({
     imports: [
@@ -20,6 +22,7 @@ import { MatButtonModule, MatCardModule, MatDividerModule, MatIconModule, MatInp
         MatSelectModule,
         MatTableModule,
         MatTooltipModule,
+        MatCheckboxModule,
         FlexLayoutModule,
         PlatformModule,
         ObserversModule
@@ -38,6 +41,7 @@ import { MatButtonModule, MatCardModule, MatDividerModule, MatIconModule, MatInp
         MatSelectModule,
         MatTableModule,
         MatTooltipModule,
+        MatCheckboxModule,
         FlexLayoutModule,
         PlatformModule,
         ObserversModule

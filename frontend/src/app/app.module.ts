@@ -12,6 +12,7 @@ import { CashBookEntryModule } from './sections/cash-book-entry/module/cash-book
 import { DashboardModule } from './sections/dashboard/module/dashboard/dashboard.module';
 import { SettingsModule } from './sections/settings/module/settings/settings.module';
 import { AccountCodesModule } from './sections/account-codes/module/account-codes/account-codes.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AccountCodesModule } from './sections/account-codes/module/account-code
     DashboardModule,
     SettingsModule,
     AccountCodesModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule
   ],
   providers: [{provide: APP_BASE_HREF, useValue : '/' }],

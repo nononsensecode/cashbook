@@ -66,26 +66,6 @@ export class AccountCodesMainComponent {
         }
     }
 
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
-
-    masterToggle() {
-        this.isAllSelected() ?
-            this.selection.clear() :
-            this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-
-    checkboxLabel(row?: AccountCode): string {
-        // if (!row) {
-        //     return `${this.isAllSelected() ? 'select' : 'deselect'}`;
-        // }
-
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'}`;
-    }
-
     resetForm() {
         this.addCodeForm.reset();
         this.addCodeForm.get('code').setErrors(null);

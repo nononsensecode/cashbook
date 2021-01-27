@@ -1,8 +1,12 @@
 package model
 
 import (
+	"bufio"
 	"cashbook/cashbookerror"
 	"database/sql"
+	"log"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -46,14 +50,74 @@ const (
 	Treasury = "treasury"
 )
 
+func readAccountCodes() ([]AccountCode, error) {
+	currDir, err := os.Getwd()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	accFile, err := os.Open(currDir + "/model/acc_codes.txt")
+	if err != nil {
+		return nil, err
+	}
+	defer accFile.Close()
+
+	scanner := bufio.NewScanner(accFile)
+	var accountCodes []AccountCode
+	for scanner.Scan() {
+		codeAsArray := strings.Split(scanner.Text(), ",")
+		accountCodes = append(accountCodes, AccountCode{AccCode: codeAsArray[0], Desc: codeAsArray[1]})
+	}
+
+	return accountCodes, nil
+}
+
+// InitializeAccountCodes fills acc_code table with data
+func InitializeAccountCodes() error {
+	accountCodes, err := readAccountCodes()
+	if err != nil {
+		return err
+	}
+
+	transaction, err := DB.Begin()
+	if err != nil {
+		return err
+	}
+	defer transaction.Commit()
+
+	insertString := "INSERT INTO acc_code (acc_code, desc) VALUES "
+	vals := []interface{}{}
+
+	for _, accountCode := range accountCodes {
+		insertString += "(?, ?),"
+		vals = append(vals, accountCode.AccCode, accountCode.Desc)
+	}
+
+	insertString = insertString[0 : len(insertString)-1]
+
+	statement, err := DB.Prepare(insertString)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(vals...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CreateTables creates article table
 func CreateTables() error {
 	statement, err := DB.Prepare(`CREATE TABLE IF NOT EXISTS 
 		cash_register(id INTEGER PRIMARY KEY AUTOINCREMENT,
-			type TEXT CHECK( type IN ('receipt', 'payment') ),
+			type TEXT CHECK(type IN ('receipt', 'payment')),
 			ob REAL, date TEXT, cr_no TEXT, acc_code TEXT,
-			acc_type TEXT CHECK( acc_type IN ('cash', 'operative', 'non operative', 'treasury' ),
-			amount REAL) ) )`)
+			acc_type TEXT CHECK(acc_type IN ('cash', 'operative', 'non operative', 'treasury')),
+			amount REAL)`)
 	if err != nil {
 		return err
 	}
@@ -63,6 +127,7 @@ func CreateTables() error {
 	if err != nil {
 		return err
 	}
+	log.Println("cash_register table created successfully")
 
 	statement, err = DB.Prepare(`CREATE TABLE IF NOT EXISTS 
 		 acc_code(id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -70,12 +135,12 @@ func CreateTables() error {
 	if err != nil {
 		return err
 	}
-	defer statement.Close()
 
 	_, err = statement.Exec()
 	if err != nil {
 		return err
 	}
+	log.Println("acc_code table created successfully")
 
 	return nil
 }
@@ -175,10 +240,10 @@ func FindAllAccountCodes() ([]AccountCode, error) {
 // FindAccountCodeByCode find the account code by the `code` supplied
 func FindAccountCodeByCode(code string) (AccountCode, error) {
 	var accountCode AccountCode
-	
+
 	err := DB.QueryRow("SELECT * FROM acc_code WHERE code = ?", code).
 		Scan(&accountCode.ID, &accountCode.AccCode, &accountCode.Desc)
-	
+
 	switch {
 	case err == sql.ErrNoRows:
 		return AccountCode{}, cashbookerror.AccountCodeDoesNotExistError(code)

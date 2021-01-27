@@ -1,7 +1,8 @@
 import { SelectionModel } from "@angular/cdk/collections";
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatTableDataSource } from "@angular/material";
+import { from, Subscription } from "rxjs";
 import { AccountCode } from "src/app/shared/domain/model/account-code";
 import { HeadingService } from "src/app/shared/services/heading/heading.service";
 
@@ -10,8 +11,9 @@ import { HeadingService } from "src/app/shared/services/heading/heading.service"
     templateUrl: './account-codes-main.component.html',
     styleUrls: ['./account-codes-main.component.css']
 })
-export class AccountCodesMainComponent {
+export class AccountCodesMainComponent implements OnInit, OnDestroy {
 
+    data: AccountCode[] = [];
     dataSource = new MatTableDataSource(ELEMENT_DATA);
     displayedColumns = ['select', 'id', 'code', 'description']
     selection = new SelectionModel<AccountCode>(false, []);
@@ -20,9 +22,25 @@ export class AccountCodesMainComponent {
         code: new FormControl('', [Validators.required]),
         description: new FormControl('')
     });
+    private accountCodeSubscription: Subscription;
 
     constructor(private headingService: HeadingService) {
         this.headingService.setHeading('Account Codes');
+    }
+
+    ngOnInit() {
+        // @ts-ignore
+        const accountCodes = from(window.backend.findAllAccountCodes());
+        this.accountCodeSubscription = accountCodes.subscribe((result: string) => {
+            const json = JSON.parse(result);
+            this.data = json;
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.accountCodeSubscription) {
+            this.accountCodeSubscription.unsubscribe();
+        }
     }
 
     saveCode() {

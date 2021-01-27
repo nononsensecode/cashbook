@@ -20,7 +20,7 @@
         </mat-card>
         <div class="main-container mat-elevation-z8" style="margin-top: 20px;">
             <div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="20px" class="table-container">
-                <table mat-table #table [dataSource]="dataSource">
+                <table mat-table #table [dataSource]="data">
                       <!-- Checkbox Column -->
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>Select</th>
@@ -39,7 +39,7 @@
                     <!-- Account Code column -->
                     <ng-container matColumnDef="code">
                         <th mat-header-cell *matHeaderCellDef>Account Code</th>
-                        <td mat-cell *matCellDef="let element">{{element.code}}</td>
+                        <td mat-cell *matCellDef="let element">{{element.accountCode}}</td>
                     </ng-container>
             
                     <!-- Description column -->

@@ -10,4 +10,11 @@ export class SettingsMainComponent {
     constructor(private headingService: HeadingService) {
         this.headingService.setHeading('Settings');
     }
+
+    initializeAccountCodes() {
+        // @ts-ignore
+        window.backend.initializeAccountCodes().then(result => {
+            console.log(result);
+        })
+    }
 }

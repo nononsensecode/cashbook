@@ -21,19 +21,30 @@ func startup() string {
 
 func init() {
 	var err error
-	model.DB, err = sql.Open("sqlite3", "./cashbook.db")
+	model.DB, err = sql.Open("sqlite3", "file:cashbook.db")
 	if err != nil {
-		log.Println(err)
+		log.Fatalln(err)
 		initDb = "Database cannot be created"
 	}
+	log.Println("Database created successfully")
 
 	err = model.CreateTables()
 	if err != nil {
-		log.Println(err)
+		log.Fatalln(err)
 		initDb = "Tables cannot be created"
 	}
 
 	initDb = "Database and tables created successfully"
+}
+
+func initializeAccountCodes() bool {
+	err := model.InitializeAccountCodes()
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	return true
 }
 
 func findAllAccountCodes() string {
@@ -42,7 +53,7 @@ func findAllAccountCodes() string {
 		log.Println(err)
 		return utils.RespondWithError(500, "Unknown error")
 	}
-	
+
 	return utils.RespondWithJSON(accountCodes)
 }
 
@@ -52,7 +63,7 @@ func findAccountCodeByCode(code string) string {
 		accountCodeError, ok := err.(*cashbookerror.AccountCodeError)
 		if ok {
 			log.Println(err)
-			switch{
+			switch {
 			case accountCodeError.Code == 404:
 				return utils.RespondWithError(accountCodeError.Code, accountCodeError.Err.Error())
 			default:
@@ -102,5 +113,6 @@ func main() {
 	app.Bind(findAccountCodeByCode)
 	app.Bind(createAccountCode)
 	app.Bind(updateAccountCode)
+	app.Bind(initializeAccountCodes)
 	app.Run()
 }
